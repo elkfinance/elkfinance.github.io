@@ -86,8 +86,8 @@ $(function() {
     //===== syotimer js
     $('#simple_timer').syotimer({
       year: 2021,
-      month: 4,
-      day: 10,
+      month: 6,
+      day: 25,
       hour: 16,
       minute: 0,
       timeZone: 0,
