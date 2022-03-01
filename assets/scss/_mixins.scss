@@ -1,0 +1,270 @@
+// breakpoints
+@mixin breakpoint($name) {
+
+  @if map-has-key($breakpoints, $name) {
+    @media (#{$breakpoint-mode}-width: #{inspect(map-get($breakpoints, $name))}) {
+      @content;
+    }
+  }
+
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+    +"Please make sure it is defined in `$breakpoints` map.";
+  }
+}
+
+//--------------------------------------------------//
+
+
+// font size
+@function calculateRem($size) {
+  $remSize: $size / 16px;
+  @return $remSize * 1rem;
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+
+@function getVW($target) {
+  $vw-context: (1920 * .01) * 1px;
+  @return ($target/$vw-context) * 1vw;
+}
+
+//--------------------------------------------------//
+
+
+// placeholders
+@mixin placeholder {
+  &::-webkit-input-placeholder {
+    @content;
+  }
+
+  &:-moz-placeholder {
+    @content;
+  }
+
+  &::-moz-placeholder {
+    @content;
+  }
+
+  &:-ms-input-placeholder {
+    @content;
+  }
+
+}
+
+//--------------------------------------------------//
+
+
+// ratio
+@mixin ratio($ratio: 1 1, $selector: "> :first-child") {
+  $selector: unquote($selector);
+
+  height: 0;
+  padding-bottom: percentage(nth($ratio, 2) / nth($ratio, 1));
+  position: relative;
+
+  #{$selector} {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+//--------------------------------------------------//
+
+
+// retina
+@mixin img-2x($image) {
+
+  @media (min-device-pixel-ratio: 1.3),
+  (min-resolution: 1.3dppx) {
+    background-image: url($image);
+  }
+}
+
+//--------------------------------------------------//
+
+
+// quantity
+@mixin quantity-query($number, $comparison: 'equal') {
+  $nth: '';
+
+  @if index(('greater''more''>'), $comparison) {
+    $nth: 'n + #{$number}';
+  }
+
+  @else if index(('less''fewer''<'), $comparison) {
+    $nth: '-n + #{$number}';
+  }
+
+  @else if index(('equal''same''='), $comparison) {
+    $nth: $number;
+  }
+
+  @else {
+    @warn "Invalid $comparison value.";
+  }
+
+  &:nth-last-child(#{$nth}):first-child {
+
+    &,
+    &~* {
+      @content;
+    }
+  }
+}
+
+@mixin qq-equal($number) {
+  @include quantity-query($number, equal) {
+    @content;
+  }
+}
+
+@mixin qq-greater($number) {
+  @include quantity-query($number, greater) {
+    @content;
+  }
+}
+
+@mixin qq-less($number) {
+  @include quantity-query($number, less) {
+    @content;
+  }
+}
+
+//--------------------------------------------------//
+
+
+// hardware acceleration
+@mixin hardware($backface: true, $perspective: 1000) {
+  @if $backface {
+    backface-visibility: hidden;
+  }
+
+  perspective:$perspective;
+}
+
+//--------------------------------------------------//
+
+
+// handling hover states
+// 'mouse'      : Handle mouse, touch pad
+// 'touch'      : Handle smartphones, touchscreens
+// 'stylus'     : Handle stylus-based screens
+// 'controller' : Handle Nintendo Wii controller, Microsoft Kinect
+$mq-input: ('mouse': '(hover: hover) and (pointer: fine)',
+  'touch': '(hover: none) and (pointer: coarse)',
+  'stylus': '(hover: none) and (pointer: fine)',
+  'controller': '(hover: hover) and (pointer: coarse)'
+);
+
+@mixin hover($preset: false, $device: 'mouse', $active: false, $handleIE: false) {
+  $device: if($device==null, 'mouse', $device);
+  $mediaquery: map-get($mq-input, $device);
+  $activeState: if($active, '&:active, ', '');
+  $ieState: if($handleIE, ', .ie &:hover, .ie &:focus', '');
+  $selectors: $activeState + '&:hover, &:focus'+ $ieState;
+
+  @media #{$mediaquery} {
+    @if $preset {
+      #{$selectors} {
+        @content;
+      }
+    }
+
+    @else {
+      @content;
+    }
+  }
+}
+//--------------------------------------------------//
+
+
+// css inview
+@mixin inview-fadein {
+  opacity: 0;
+  transition: opacity .5s ease;
+
+  &.is-inview {
+    opacity: 1;
+    transition: opacity .5s ease;
+  }
+}
+
+@mixin inview-fadein-up {
+  transform: translateY(60px);
+  opacity: 0;
+  transition: transform .8s ease,
+    opacity .8s ease;
+
+  &.is-inview {
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform .8s ease,
+      opacity .8s ease;
+  }
+}
+//--------------------------------------------------//
+
+
+// button reset
+@mixin buttonReset {
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+//--------------------------------------------------//
+
+
+// scrim Gradient
+@mixin scrimGradient($startColor: $color-black, $direction: 'to bottom') {
+  $scrimCoordinates: (
+    0: 1,
+    19: 0.738,
+    34: 0.541,
+    47: 0.382,
+    56.5: 0.278,
+    65: 0.194,
+    73: 0.126,
+    80.2: 0.075,
+    86.1: 0.042,
+    91: 0.021,
+    95.2: 0.008,
+    98.2: 0.002,
+    100: 0
+  );
+
+  $hue: hue($startColor);
+  $saturation: saturation($startColor);
+  $lightness: lightness($startColor);
+  $stops: ();
+
+  @each $colorStop, $alphaValue in $scrimCoordinates {
+    $stop: hsla($hue, $saturation, $lightness, $alphaValue) percentage($colorStop/100);
+    $stops: append($stops, $stop, comma);
+  }
+
+  background: linear-gradient(unquote($direction), $stops);
+}
+
+// button reset
+@mixin buttonReset {
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}

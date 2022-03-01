@@ -1,0 +1,53 @@
+// font family
+@each $ff, $font in $fontfamilies {
+  .ff--#{$ff} {
+    font-family:$font;
+  }
+}
+
+
+// font sizes
+@each $fs in $fontsizes {
+  .fs--#{$fs} {
+    font-size:#{$fs}px;
+    font-size:calc(#{$fs} / 16 * 1rem);
+  }
+}
+
+
+// font colors
+@each $fc, $color in $fontcolors {
+  .fc--#{$fc} {
+    color:$color;
+  }
+}
+
+
+// font weights
+@each $fw in $fontweights {
+  .fw--#{$fw} {
+    font-weight:$fw;
+  }
+}
+
+
+// line heights
+@each $lh in $lineheights {
+  .lh--#{$lh} {
+    line-height:calc(#{$lh} / 100);
+  }
+}
+
+
+// letter spacing
+@each $ls, $space in $letterspacing {
+  .ls--#{$ls} {
+    letter-spacing:#{$space}em;
+  }
+}
+
+
+// text transform
+.tt--capital {text-transform:capitalize;}
+.tt--lower {text-transform:lowercase;}
+.tt--upper {text-transform:uppercase;}

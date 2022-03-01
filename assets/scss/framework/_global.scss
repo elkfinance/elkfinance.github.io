@@ -1,0 +1,104 @@
+* {
+  box-sizing:border-box;
+}
+
+body {
+  min-width:320px;
+  overflow-x:hidden;
+  -moz-osx-font-smoothing:grayscale;
+  -webkit-font-smoothing:antialiased;
+  font-family:$primaryfont;
+  color:$primarycolor;
+  background-color:$backgroundcolor;
+  letter-spacing:$globalletterspacing;
+}
+
+a {
+  color:inherit;
+  text-decoration:none;
+}
+
+ul, ol {
+  margin:0;
+  padding:0;
+}
+
+ul {
+  list-style:none;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin:0;
+}
+
+fieldset {
+  padding:0;
+  border:0;
+  margin:0;
+}
+
+input, textarea, button {
+  outline:0;
+}
+
+
+// locomotive-scroll
+html {
+  &.has-scroll-smooth {
+    overflow:hidden;
+  }
+
+  &.has-scroll-dragging {
+    user-select:none;
+  }
+}
+
+body {
+  .has-scroll-smooth & {
+    overflow:hidden;
+  }
+}
+
+[data-scroll-container] {
+  .has-scroll-smooth & {
+    min-height:100vh;
+  }
+}
+
+.c-scrollbar {
+  position:absolute;
+  right:0;
+  top:0;
+  width:11px;
+  height:100vh;
+  transform-origin:center right;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity:0;
+  background:rgba(255,255,255,0.3);
+  z-index:999;
+
+  &:hover {
+    transform: scaleX(2);
+  }
+
+  &:hover,
+  .has-scroll-scrolling &,
+  .has-scroll-dragging & {
+    opacity:1;
+  }
+}
+
+.c-scrollbar_thumb {
+  position:absolute;
+  top:0;
+  right:0;
+  background-color:#000;
+  opacity:0.5;
+  width:7px;
+  margin:2px;
+  cursor:grab;
+
+  .has-scroll-dragging & {
+    cursor:grabbing;
+  }
+}
