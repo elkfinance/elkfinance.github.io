@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/post/lightpaper", {data:[{}],fetch:{},mutations:void 0});
